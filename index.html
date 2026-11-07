@@ -55,25 +55,12 @@
         .toast-exit { transform: translateY(0); opacity: 1; }
         .toast-exit-active { transform: translateY(100%); opacity: 0; transition: all 0.3s ease-in; }
         
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background-color: rgba(81, 45, 109, 0.2); border-radius: 20px; }
         .dark .custom-scroll::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(81, 45, 109, 0.5); }
         .dark .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.4); }
-
-        /* Styling Slider Persentase Kustom */
-        .pct-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none;
-            width: 16px; height: 16px; border-radius: 50%;
-            background: var(--run-red); cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .pct-slider::-moz-range-thumb {
-            width: 16px; height: 16px; border-radius: 50%;
-            background: var(--run-red); cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
     </style>
 </head>
 <body class="text-run-purple dark:text-gray-100 bg-run-white dark:bg-dark-bg transition-colors duration-300 antialiased fixed inset-0 w-full flex flex-col md:flex-row overflow-hidden">
@@ -118,10 +105,10 @@
         <div id="sidebar-overlay" class="fixed inset-0 bg-run-purple/50 dark:bg-black/60 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
         
         <aside id="sidebar" class="fixed md:relative inset-y-0 left-0 z-50 w-64 bg-run-white dark:bg-dark-card border-r border-run-purple/10 dark:border-white/5 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col shadow-2xl md:shadow-none transition-colors duration-300">
-            <!-- Header Sidebar (Logo Fixed Size) -->
-            <div class="h-20 flex items-center justify-between px-6 border-b border-run-purple/10 dark:border-white/5">
-                <img src="finance_logo.png" alt="AlfReddd" class="w-36 md:w-40 h-auto object-contain object-left transform scale-125 md:scale-[1.25] origin-left block dark:hidden">
-                <img src="finance_logo_putih.png" alt="AlfReddd" class="w-36 md:w-40 h-auto object-contain object-left transform scale-125 md:scale-[1.25] origin-left hidden dark:block">
+            <!-- Header Sidebar -->
+            <div class="h-20 flex items-center justify-between px-6 border-b border-run-purple/10 dark:border-white/5 overflow-hidden">
+                <img src="finance_logo.png" alt="AlfReddd" class="w-40 h-auto object-contain object-left transform scale-[1.25] origin-left block dark:hidden">
+                <img src="finance_logo_putih.png" alt="AlfReddd" class="w-40 h-auto object-contain object-left transform scale-[1.25] origin-left hidden dark:block">
                 <button id="btn-close-sidebar" class="md:hidden text-run-purple/60 dark:text-gray-400 hover:text-run-red p-2 -mr-2 rounded-lg shrink-0 relative z-10">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -143,6 +130,10 @@
                     <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     Alokasi Anggaran
                 </a>
+                <a href="#rencana" id="nav-rencana" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn ml-2 border-l-2 border-run-purple/20 dark:border-gray-600">
+                    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    Rencana Pengeluaran
+                </a>
                 <a href="#rekam" id="nav-rekam" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-run-white bg-run-purple shadow-md rounded-xl transition nav-btn">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     Rekam Harian
@@ -157,7 +148,7 @@
                 </a>
             </nav>
 
-            <!-- Bottom Sidebar (Dark Mode & Logout) -->
+            <!-- Bottom Sidebar -->
             <div class="p-4 border-t border-run-purple/10 dark:border-white/5 space-y-2">
                 <button id="btn-toggle-dark" class="w-full flex items-center justify-center gap-2 text-sm bg-run-purple/5 dark:bg-white/10 hover:bg-run-purple/10 dark:hover:bg-white/20 text-run-purple dark:text-gray-200 font-bold py-3 px-4 rounded-xl transition duration-300">
                     <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
@@ -176,13 +167,13 @@
         <div class="flex-1 flex flex-col h-full overflow-hidden relative">
             
             <!-- Mobile Header -->
-            <header class="md:hidden flex items-center justify-between h-20 px-6 bg-run-white dark:bg-dark-card border-b border-run-purple/10 dark:border-white/5 z-30 shrink-0 transition-colors duration-300">
+            <header class="md:hidden flex items-center justify-between h-20 px-6 bg-run-white dark:bg-dark-card border-b border-run-purple/10 dark:border-white/5 z-30 shrink-0 transition-colors duration-300 overflow-hidden">
                 <button id="btn-open-sidebar" class="text-run-purple dark:text-gray-300 hover:text-run-red p-2 -ml-2 rounded-lg transition shrink-0 relative z-10">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <div class="flex-1 flex justify-center px-4">
-                    <img src="finance_logo.png" alt="AlfReddd" class="w-36 md:w-40 h-auto object-contain transform scale-125 md:scale-[1.25] block dark:hidden">
-                    <img src="finance_logo_putih.png" alt="AlfReddd" class="w-36 md:w-40 h-auto object-contain transform scale-125 md:scale-[1.25] hidden dark:block">
+                    <img src="finance_logo.png" alt="AlfReddd" class="w-40 h-auto object-contain transform scale-[1.25] block dark:hidden">
+                    <img src="finance_logo_putih.png" alt="AlfReddd" class="w-40 h-auto object-contain transform scale-[1.25] hidden dark:block">
                 </div>
                 <div class="w-8 shrink-0 relative z-10"></div>
             </header>
@@ -211,6 +202,21 @@
                                         <span>Tambahan: <strong id="budget-tambahan" class="font-bold bg-green-500/80 dark:bg-green-600/80 py-1 px-2 rounded-md ml-1">+Rp 0</strong></span>
                                     </div>
                                     <span class="w-full sm:w-auto">Pengeluaran: <strong id="budget-terpakai" class="font-bold bg-run-red/80 dark:bg-run-red/90 py-1 px-2 rounded-md ml-1">Rp 0</strong></span>
+                                </div>
+                            </div>
+
+                            <!-- QUICK ACTIONS PANEL -->
+                            <div class="mb-6 bg-run-purple/5 dark:bg-dark-card p-5 rounded-3xl border border-run-purple/10 dark:border-white/5 shadow-sm transition-colors">
+                                <h4 class="text-xs font-bold text-run-purple/70 dark:text-gray-400 uppercase tracking-wider mb-3">Aksi Cepat (Penyesuaian Budget)</h4>
+                                <div class="flex gap-3">
+                                    <button id="btn-quick-tambah" type="button" class="flex-1 bg-green-500/10 hover:bg-green-500/20 text-green-600 dark:text-green-400 font-bold py-3 rounded-xl text-sm transition border border-transparent hover:border-green-500/30 flex items-center justify-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                        Penambahan Khusus
+                                    </button>
+                                    <button id="btn-quick-kurang" type="button" class="flex-1 bg-run-red/10 hover:bg-run-red/20 text-run-red dark:text-[#ff6b84] font-bold py-3 rounded-xl text-sm transition border border-transparent hover:border-run-red/30 flex items-center justify-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"></path></svg>
+                                        Pengurangan Khusus
+                                    </button>
                                 </div>
                             </div>
 
@@ -276,7 +282,7 @@
                     </div>
                 </div>
 
-                <!-- TAMPILAN: PERENCANAAN GAJI & POS ANGGARAN -->
+                <!-- TAMPILAN: ALOKASI ANGGARAN (PERENCANAAN GAJI) -->
                 <div id="view-perencanaan" class="hidden max-w-6xl mx-auto pb-24 md:pb-10">
                     
                     <!-- Header & Pilihan Periode -->
@@ -372,6 +378,45 @@
                         </div>
                     </div>
 
+                </div>
+                
+                <!-- TAMPILAN: RENCANA PENGELUARAN -->
+                <div id="view-rencana-pengeluaran" class="hidden max-w-6xl mx-auto pb-24 md:pb-10">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-run-purple dark:text-gray-100">Rencana Pengeluaran Terperinci</h2>
+                            <p class="text-xs text-run-purple/60 dark:text-gray-400 font-semibold mt-1">Rincikan budget Anda ke setiap kategori dan pantau batas pengeluarannya.</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-run-purple/5 dark:bg-dark-card p-1.5 rounded-2xl border border-run-purple/10 dark:border-white/5 transition-colors duration-300">
+                            <label class="text-xs font-bold text-run-purple dark:text-gray-200 px-2 whitespace-nowrap shrink-0">Bulan:</label>
+                            <input type="month" id="rencana-periode" class="w-full sm:w-auto min-w-[140px] bg-run-white dark:bg-dark-input border border-run-purple/20 dark:border-white/10 text-run-purple dark:text-white text-xs font-bold py-2 px-3 rounded-xl outline-none focus:border-run-purple cursor-pointer">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-run-white dark:bg-dark-card rounded-3xl border border-run-purple/10 dark:border-white/5 shadow-sm overflow-hidden transition-colors duration-300">
+                        <div class="p-5 border-b border-run-purple/10 dark:border-white/5 bg-run-purple/5 dark:bg-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <h3 class="text-sm font-extrabold text-run-purple dark:text-gray-200 uppercase tracking-wider">Detail Kategori Pengeluaran</h3>
+                            <button id="btn-save-rencana" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition shadow-sm whitespace-nowrap">Simpan Rencana</button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[11px] uppercase font-extrabold text-run-purple/60 dark:text-gray-400 border-b border-run-purple/10 dark:border-white/5 bg-run-white dark:bg-dark-card transition-colors duration-300">
+                                        <th class="p-4 min-w-[220px]">Kategori Pengeluaran</th>
+                                        <th class="p-4 min-w-[100px]">Jumlah (Qty)</th>
+                                        <th class="p-4 min-w-[150px]">Harga Satuan (Rp)</th>
+                                        <th class="p-4 min-w-[150px]">Total Rencana (Rp)</th>
+                                        <th class="p-4 min-w-[150px]">Realisasi (Rp)</th>
+                                        <th class="p-4 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-rencana-body" class="divide-y divide-run-purple/5 dark:divide-white/5 text-sm font-semibold text-run-purple dark:text-gray-200">
+                                    <!-- Dynamic Render: Rencana Pengeluaran -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- TAMPILAN: PENGATURAN -->
@@ -494,6 +539,7 @@
         // Referensi View Navigasi
         const viewRekam = document.getElementById('view-rekam');
         const viewPerencanaan = document.getElementById('view-perencanaan');
+        const viewRencanaPengeluaran = document.getElementById('view-rencana-pengeluaran');
         const viewPengaturan = document.getElementById('view-pengaturan');
         const navBtns = document.querySelectorAll('.nav-btn');
 
@@ -539,6 +585,7 @@
 
         // DATA KATEGORI BAWAAN SISTEM
         const defaultPengeluaran = [
+            "Pengurangan Khusus", // Injeksi Default
             "11 - Makanan Pokok", "12 - Aqua Galon", "13 - Makanan Ringan", "14 - Makanan Khusus Olahraga", "15 - Pemberian Makanan",
             "21 - Bensin Motor", "22 - Travel/Perjalanan", "23 - Parkir", "24 - Sewa Kendaraan",
             "31 - Top Up Game",
@@ -551,7 +598,36 @@
             "101 - Member Gym", "102 - Alat dan Event Olahraga",
             "111 - Uang Kas Paguyuban/Seksi", "112 - Iuran CBB", "113 - Biaya Administrasi Bank", "114 - Donasi/Iuran Lainnya", "115 - Bea Meterai", "116 - Pemberian Hadiah/Oleh-oleh", "117 - Biaya Administrasi Lainnya"
         ];
-        const defaultPemasukan = ["1 - Gaji/Pendapatan Utama", "2 - Bonus/Tunjangan", "3 - Hasil Usaha/Investasi", "4 - Uang Masuk/Pengalihan", "5 - Pemasukan Lainnya"];
+        const defaultPemasukan = ["Penambahan Khusus", "1 - Gaji/Pendapatan Utama", "2 - Bonus/Tunjangan", "3 - Hasil Usaha/Investasi", "4 - Uang Masuk/Pengalihan", "5 - Pemasukan Lainnya"];
+
+        // ----------------------------------------------------
+        // QUICK ACTIONS (PENYESUAIAN BUDGET)
+        // ----------------------------------------------------
+        document.getElementById('btn-quick-tambah').addEventListener('click', () => {
+            setModeTransaksi(false); // Mode Pemasukan
+            if (!kategoriData.pemasukan.includes("Penambahan Khusus")) {
+                kategoriData.pemasukan.unshift("Penambahan Khusus");
+                saveSettings(); // Menyimpan ke DB secara asinkron
+                renderDropdownKategori(); // Update UI langsung
+            }
+            inputKategori.value = "Penambahan Khusus";
+            inputKeterangan.value = "Penambahan Khusus";
+            formTransaksi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => inputJumlah.focus(), 300);
+        });
+
+        document.getElementById('btn-quick-kurang').addEventListener('click', () => {
+            setModeTransaksi(true); // Mode Pengeluaran
+            if (!kategoriData.pengeluaran.includes("Pengurangan Khusus")) {
+                kategoriData.pengeluaran.unshift("Pengurangan Khusus");
+                saveSettings();
+                renderDropdownKategori();
+            }
+            inputKategori.value = "Pengurangan Khusus";
+            inputKeterangan.value = "Pengurangan Khusus";
+            formTransaksi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => inputJumlah.focus(), 300);
+        });
 
         // ----------------------------------------------------
         // LOGIKA PERENCANAAN & DASHBOARD BUDGET GLOBAL
@@ -871,9 +947,6 @@
             }
         });
 
-        // ----------------------------------------------------
-        // INTEGRASI BUDGET KE HALAMAN REKAM HARIAN (DASHBOARD)
-        // ----------------------------------------------------
         function loadPerencanaanGlobal() {
             if(!currentUser) return;
             const docRef = doc(db, 'users', currentUser.uid, 'perencanaan', currentMonthGlobal);
@@ -924,6 +997,119 @@
         }
 
         // ----------------------------------------------------
+        // LOGIKA RENCANA PENGELUARAN TERPERINCI
+        // ----------------------------------------------------
+        let rencanaPengeluaranMonth = new Date().toISOString().slice(0, 7);
+        let rencanaPengeluaranData = {};
+        let unsubscribeRencanaPengeluaran = null;
+
+        const rencanaPeriodeInput = document.getElementById('rencana-periode');
+        rencanaPeriodeInput.value = rencanaPengeluaranMonth;
+        rencanaPeriodeInput.addEventListener('change', (e) => {
+            rencanaPengeluaranMonth = e.target.value;
+            loadRencanaPengeluaranData();
+        });
+
+        function loadRencanaPengeluaranData() {
+            if(!currentUser) return;
+            const docRef = doc(db, 'users', currentUser.uid, 'rencana_pengeluaran', rencanaPengeluaranMonth);
+            if(unsubscribeRencanaPengeluaran) unsubscribeRencanaPengeluaran();
+            
+            unsubscribeRencanaPengeluaran = onSnapshot(docRef, (docSnap) => {
+                rencanaPengeluaranData = docSnap.exists() ? docSnap.data() : {};
+                renderRencanaPengeluaranTable();
+            });
+        }
+
+        document.getElementById('btn-save-rencana').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-save-rencana');
+            btn.innerText = "Menyimpan...";
+            btn.disabled = true;
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid, 'rencana_pengeluaran', rencanaPengeluaranMonth), rencanaPengeluaranData);
+                showToast("Rencana Pengeluaran Disimpan!");
+            } catch (error) {
+                showToast("Gagal menyimpan rencana", "error");
+            } finally {
+                btn.innerText = "Simpan Rencana";
+                btn.disabled = false;
+            }
+        });
+
+        function getRealisasiPengeluaranBulanIni(kategori) {
+            let total = 0;
+            transaksiData.forEach(t => {
+                if (t.jenis === 'pengeluaran' && t.kategori === kategori && t.tanggal && t.tanggal.startsWith(rencanaPengeluaranMonth)) {
+                    total += t.jumlah;
+                }
+            });
+            return total;
+        }
+
+        function renderRencanaPengeluaranTable() {
+            const tableBody = document.getElementById('table-rencana-body');
+            tableBody.innerHTML = '';
+            
+            const listPengeluaran = kategoriData.pengeluaran || [];
+
+            listPengeluaran.forEach((kategori, index) => {
+                if(!rencanaPengeluaranData[kategori]) {
+                    rencanaPengeluaranData[kategori] = { jumlah: 0, harga: 0 };
+                }
+                const dataKat = rencanaPengeluaranData[kategori];
+                const realisasi = getRealisasiPengeluaranBulanIni(kategori);
+                const totalRencana = (dataKat.jumlah || 0) * (dataKat.harga || 0);
+                const sisa = totalRencana - realisasi;
+
+                let statusBadge = '-';
+                if (totalRencana > 0) {
+                    if (sisa < 0) {
+                        statusBadge = '<span class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Kurang Dana</span>';
+                    } else if (sisa === 0) {
+                        statusBadge = '<span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Habis</span>';
+                    } else if (sisa <= (0.1 * totalRencana)) {
+                        statusBadge = '<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Menipis</span>';
+                    } else {
+                        statusBadge = '<span class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Aman</span>';
+                    }
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 text-xs font-bold text-run-purple dark:text-gray-200 truncate max-w-[200px]" title="${kategori}">${kategori}</td>
+                    <td class="p-4">
+                        <input type="text" data-kat="${kategori}" data-field="jumlah" value="${dataKat.jumlah ? formatNumberForInput(dataKat.jumlah) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-16 md:w-20 outline-none focus:border-run-purple dark:focus:border-gray-400 text-center">
+                    </td>
+                    <td class="p-4">
+                        <input type="text" data-kat="${kategori}" data-field="harga" value="${dataKat.harga ? formatNumberForInput(dataKat.harga) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-28 md:w-32 outline-none focus:border-run-purple dark:focus:border-gray-400">
+                    </td>
+                    <td class="p-4 font-bold text-run-purple dark:text-gray-100" id="rp-total-${index}">${formatRp(totalRencana)}</td>
+                    <td class="p-4 font-bold text-run-purple/70 dark:text-gray-400" id="rp-real-${index}">${formatRp(realisasi)}</td>
+                    <td class="p-4 text-center" id="rp-status-${index}">${statusBadge}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            document.querySelectorAll('.rp-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    let val = this.value.replace(/[^0-9,]/g, '');
+                    const parts = val.split(',');
+                    if (parts.length > 2) val = parts[0] + ',' + parts.slice(1).join('');
+                    if (parts[0].length > 0) parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    this.value = parts[1] !== undefined ? parts[0] + ',' + parts[1].substring(0, 2) : parts[0];
+
+                    const kat = this.dataset.kat;
+                    const field = this.dataset.field;
+                    rencanaPengeluaranData[kat][field] = parseRupiahInput(this.value);
+                    
+                    // Re-render specifically this row logic (or just full render for simplicity since it's local state)
+                    renderRencanaPengeluaranTable();
+                });
+            });
+        }
+
+
+        // ----------------------------------------------------
         // ROUTING BERBASIS HASH URL & SIDEBAR
         // ----------------------------------------------------
         const toggleSidebar = () => {
@@ -938,10 +1124,11 @@
             if (!currentUser) return;
             const hash = window.location.hash.toLowerCase() || '#rekam';
 
-            viewRekam.classList.add('hidden'); viewPerencanaan.classList.add('hidden'); viewPengaturan.classList.add('hidden');
+            viewRekam.classList.add('hidden'); viewPerencanaan.classList.add('hidden'); 
+            viewRencanaPengeluaran.classList.add('hidden'); viewPengaturan.classList.add('hidden');
 
             navBtns.forEach(btn => {
-                btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn";
+                btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn" + (btn.id === 'nav-rencana' ? ' ml-2 border-l-2 border-run-purple/20 dark:border-gray-600' : '');
                 const svg = btn.querySelector('svg');
                 if (svg) svg.classList.add('opacity-70');
             });
@@ -949,7 +1136,7 @@
             const activateButton = (btnId) => {
                 const btn = document.getElementById(btnId);
                 if (btn) {
-                    btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-run-white bg-run-purple shadow-md rounded-xl transition nav-btn";
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-run-white bg-run-purple shadow-md rounded-xl transition nav-btn" + (btn.id === 'nav-rencana' ? ' ml-2' : '');
                     const svg = btn.querySelector('svg');
                     if (svg) svg.classList.remove('opacity-70');
                 }
@@ -958,6 +1145,8 @@
             switch (hash) {
                 case '#perencanaan':
                     viewPerencanaan.classList.remove('hidden'); activateButton('nav-perencanaan'); loadPerencanaanData(); break;
+                case '#rencana':
+                    viewRencanaPengeluaran.classList.remove('hidden'); activateButton('nav-rencana'); loadRencanaPengeluaranData(); break;
                 case '#pengaturan':
                     viewPengaturan.classList.remove('hidden'); activateButton('nav-pengaturan'); renderUIKategoriKustom(); break;
                 case '#dashboard': case '#report':
@@ -988,6 +1177,11 @@
                     kategoriData = { pengeluaran: [...defaultPengeluaran], pemasukan: [...defaultPemasukan] };
                     await setDoc(docRef, kategoriData);
                 }
+
+                // Inject Kategori Khusus Otomatis jika tidak ada agar fitur Penyesuaian Budget berfungsi
+                if (!kategoriData.pengeluaran.includes("Pengurangan Khusus")) kategoriData.pengeluaran.unshift("Pengurangan Khusus");
+                if (!kategoriData.pemasukan.includes("Penambahan Khusus")) kategoriData.pemasukan.unshift("Penambahan Khusus");
+
                 renderDropdownKategori();
                 renderUIKategoriKustom();
                 await loadPerencanaanSettings();
@@ -1185,7 +1379,9 @@
                 showToast(`Selamat datang!`); loadSettings(); loadDataTransaksi(); handleRouting(); 
             } else {
                 currentUser = null; viewApp.classList.add('hidden'); viewLogin.classList.remove('hidden');
-                if (unsubscribeSnapshot) unsubscribeSnapshot(); if (unsubscribePerencanaanGlobal) unsubscribePerencanaanGlobal();
+                if (unsubscribeSnapshot) unsubscribeSnapshot(); 
+                if (unsubscribePerencanaanGlobal) unsubscribePerencanaanGlobal();
+                if (unsubscribeRencanaPengeluaran) unsubscribeRencanaPengeluaran();
                 transaksiData = []; renderUI();
             }
         });
@@ -1205,6 +1401,7 @@
                     return b.createdAt - a.createdAt;
                 });
                 renderUI();
+                renderRencanaPengeluaranTable(); // Sync Realisasi Rencana Pengeluaran on tx update
             }, (error) => { showToast("Gagal memuat data", 'error'); });
         }
 
