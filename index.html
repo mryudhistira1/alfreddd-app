@@ -130,7 +130,7 @@
                     <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     Alokasi Anggaran
                 </a>
-                <a href="#rencana" id="nav-rencana" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn ml-2 border-l-2 border-run-purple/20 dark:border-gray-600">
+                <a href="#rencana" id="nav-rencana" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn">
                     <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     Rencana Pengeluaran
                 </a>
@@ -205,18 +205,18 @@
                                 </div>
                             </div>
 
-                            <!-- QUICK ACTIONS PANEL -->
+                            <!-- PANEL REKAP PENYESUAIAN KHUSUS -->
                             <div class="mb-6 bg-run-purple/5 dark:bg-dark-card p-5 rounded-3xl border border-run-purple/10 dark:border-white/5 shadow-sm transition-colors">
-                                <h4 class="text-xs font-bold text-run-purple/70 dark:text-gray-400 uppercase tracking-wider mb-3">Aksi Cepat (Penyesuaian Budget)</h4>
+                                <h4 class="text-xs font-bold text-run-purple/70 dark:text-gray-400 uppercase tracking-wider mb-3">Rekap Penyesuaian (Bulan Ini)</h4>
                                 <div class="flex gap-3">
-                                    <button id="btn-quick-tambah" type="button" class="flex-1 bg-green-500/10 hover:bg-green-500/20 text-green-600 dark:text-green-400 font-bold py-3 rounded-xl text-sm transition border border-transparent hover:border-green-500/30 flex items-center justify-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                        Penambahan Khusus
-                                    </button>
-                                    <button id="btn-quick-kurang" type="button" class="flex-1 bg-run-red/10 hover:bg-run-red/20 text-run-red dark:text-[#ff6b84] font-bold py-3 rounded-xl text-sm transition border border-transparent hover:border-run-red/30 flex items-center justify-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"></path></svg>
-                                        Pengurangan Khusus
-                                    </button>
+                                    <div class="flex-1 bg-green-500/10 text-green-600 dark:text-green-400 font-bold py-3 rounded-xl transition flex flex-col items-center justify-center gap-1 border border-transparent">
+                                        <span class="text-[9px] md:text-[10px] uppercase tracking-wider opacity-80 text-center px-1">Penambahan (Pemasukan)</span>
+                                        <span id="recap-penambahan" class="text-base md:text-lg">+Rp 0</span>
+                                    </div>
+                                    <div class="flex-1 bg-run-red/10 text-run-red dark:text-[#ff6b84] font-bold py-3 rounded-xl transition flex flex-col items-center justify-center gap-1 border border-transparent">
+                                        <span class="text-[9px] md:text-[10px] uppercase tracking-wider opacity-80 text-center px-1">Pengurangan Khusus</span>
+                                        <span id="recap-pengurangan" class="text-base md:text-lg">-Rp 0</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -585,7 +585,7 @@
 
         // DATA KATEGORI BAWAAN SISTEM
         const defaultPengeluaran = [
-            "Pengurangan Khusus", // Injeksi Default
+            "Pengurangan Khusus",
             "11 - Makanan Pokok", "12 - Aqua Galon", "13 - Makanan Ringan", "14 - Makanan Khusus Olahraga", "15 - Pemberian Makanan",
             "21 - Bensin Motor", "22 - Travel/Perjalanan", "23 - Parkir", "24 - Sewa Kendaraan",
             "31 - Top Up Game",
@@ -598,36 +598,8 @@
             "101 - Member Gym", "102 - Alat dan Event Olahraga",
             "111 - Uang Kas Paguyuban/Seksi", "112 - Iuran CBB", "113 - Biaya Administrasi Bank", "114 - Donasi/Iuran Lainnya", "115 - Bea Meterai", "116 - Pemberian Hadiah/Oleh-oleh", "117 - Biaya Administrasi Lainnya"
         ];
-        const defaultPemasukan = ["Penambahan Khusus", "1 - Gaji/Pendapatan Utama", "2 - Bonus/Tunjangan", "3 - Hasil Usaha/Investasi", "4 - Uang Masuk/Pengalihan", "5 - Pemasukan Lainnya"];
-
-        // ----------------------------------------------------
-        // QUICK ACTIONS (PENYESUAIAN BUDGET)
-        // ----------------------------------------------------
-        document.getElementById('btn-quick-tambah').addEventListener('click', () => {
-            setModeTransaksi(false); // Mode Pemasukan
-            if (!kategoriData.pemasukan.includes("Penambahan Khusus")) {
-                kategoriData.pemasukan.unshift("Penambahan Khusus");
-                saveSettings(); // Menyimpan ke DB secara asinkron
-                renderDropdownKategori(); // Update UI langsung
-            }
-            inputKategori.value = "Penambahan Khusus";
-            inputKeterangan.value = "Penambahan Khusus";
-            formTransaksi.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => inputJumlah.focus(), 300);
-        });
-
-        document.getElementById('btn-quick-kurang').addEventListener('click', () => {
-            setModeTransaksi(true); // Mode Pengeluaran
-            if (!kategoriData.pengeluaran.includes("Pengurangan Khusus")) {
-                kategoriData.pengeluaran.unshift("Pengurangan Khusus");
-                saveSettings();
-                renderDropdownKategori();
-            }
-            inputKategori.value = "Pengurangan Khusus";
-            inputKeterangan.value = "Pengurangan Khusus";
-            formTransaksi.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => inputJumlah.focus(), 300);
-        });
+        // Default pemasukan terbaru
+        const defaultPemasukan = ["Uang Makan", "Uang Lembur", "Uang Perjalanan Dinas", "Dibayar Piutang Periode Lalu"];
 
         // ----------------------------------------------------
         // LOGIKA PERENCANAAN & DASHBOARD BUDGET GLOBAL
@@ -971,13 +943,19 @@
             
             let terpakai = 0;
             let tambahanPemasukan = 0;
+            let recapPenambahan = 0;
+            let recapPengurangan = 0;
             
             transaksiData.forEach(t => {
                 if (t.tanggal && t.tanggal.startsWith(currentMonthGlobal)) {
                     if (t.jenis === 'pengeluaran') {
                         terpakai += t.jumlah;
+                        if (t.kategori === 'Pengurangan Khusus') {
+                            recapPengurangan += t.jumlah;
+                        }
                     } else if (t.jenis === 'pemasukan') {
                         tambahanPemasukan += t.jumlah;
+                        recapPenambahan += t.jumlah;
                     }
                 }
             });
@@ -990,10 +968,16 @@
             const elTambahan = document.getElementById('budget-tambahan');
             const elTerpakai = document.getElementById('budget-terpakai');
             
+            const elRecapTambah = document.getElementById('recap-penambahan');
+            const elRecapKurang = document.getElementById('recap-pengurangan');
+            
             if(elSaldo) elSaldo.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(sisa);
             if(elBudget) elBudget.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(baseExpense + limpahan);
             if(elTambahan) elTambahan.innerText = '+' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(tambahanPemasukan);
             if(elTerpakai) elTerpakai.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(terpakai);
+            
+            if(elRecapTambah) elRecapTambah.innerText = '+' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(recapPenambahan);
+            if(elRecapKurang) elRecapKurang.innerText = '-' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(recapPengurangan);
         }
 
         // ----------------------------------------------------
@@ -1009,6 +993,43 @@
             rencanaPengeluaranMonth = e.target.value;
             loadRencanaPengeluaranData();
         });
+
+        const groupMapping = {
+            1: '1X Makanan',
+            2: '2X Transportasi',
+            3: '3X Gaming',
+            4: '4X Kebutuhan Bulanan',
+            5: '5X Belanja/Beban',
+            6: '6X Sewa/Kontrak Properti',
+            7: '7X Pemeliharaan',
+            8: '8X Entertainment/Langganan',
+            9: '9X Hobi/Konsumtif',
+            10: '10X Olahraga',
+            11: '11X Uang Keluar/Pengalihan'
+        };
+
+        function getCategoryGroup(catName) {
+            let match = catName.match(/^(\d+)/);
+            if (match) {
+                let num = parseInt(match[1]);
+                let prefix = Math.floor(num / 10);
+                if (groupMapping[prefix]) return groupMapping[prefix];
+            }
+            return 'Kategori Lainnya';
+        }
+
+        function getStatusBadge(totalRencana, sisa) {
+            if (totalRencana <= 0) return '-';
+            if (sisa < 0) {
+                return '<span class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Kurang Dana</span>';
+            } else if (sisa === 0) {
+                return '<span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Habis</span>';
+            } else if (sisa <= (0.1 * totalRencana)) {
+                return '<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Menipis</span>';
+            } else {
+                return '<span class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Aman</span>';
+            }
+        }
 
         function loadRencanaPengeluaranData() {
             if(!currentUser) return;
@@ -1050,60 +1071,85 @@
             const tableBody = document.getElementById('table-rencana-body');
             tableBody.innerHTML = '';
             
-            const listPengeluaran = kategoriData.pengeluaran || [];
+            // Hide "Pengurangan Khusus" from this table
+            const listPengeluaran = (kategoriData.pengeluaran || []).filter(k => k !== "Pengurangan Khusus");
 
-            listPengeluaran.forEach((kategori, index) => {
-                if(!rencanaPengeluaranData[kategori]) {
-                    rencanaPengeluaranData[kategori] = { jumlah: 0, harga: 0 };
-                }
-                const dataKat = rencanaPengeluaranData[kategori];
-                const realisasi = getRealisasiPengeluaranBulanIni(kategori);
-                const totalRencana = (dataKat.jumlah || 0) * (dataKat.harga || 0);
-                const sisa = totalRencana - realisasi;
-
-                let statusBadge = '-';
-                if (totalRencana > 0) {
-                    if (sisa < 0) {
-                        statusBadge = '<span class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Kurang Dana</span>';
-                    } else if (sisa === 0) {
-                        statusBadge = '<span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Habis</span>';
-                    } else if (sisa <= (0.1 * totalRencana)) {
-                        statusBadge = '<span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Menipis</span>';
-                    } else {
-                        statusBadge = '<span class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-lg text-[10px] uppercase font-bold tracking-wider">Aman</span>';
-                    }
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-4 text-xs font-bold text-run-purple dark:text-gray-200 truncate max-w-[200px]" title="${kategori}">${kategori}</td>
-                    <td class="p-4">
-                        <input type="text" data-kat="${kategori}" data-field="jumlah" value="${dataKat.jumlah ? formatNumberForInput(dataKat.jumlah) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-16 md:w-20 outline-none focus:border-run-purple dark:focus:border-gray-400 text-center">
-                    </td>
-                    <td class="p-4">
-                        <input type="text" data-kat="${kategori}" data-field="harga" value="${dataKat.harga ? formatNumberForInput(dataKat.harga) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-28 md:w-32 outline-none focus:border-run-purple dark:focus:border-gray-400">
-                    </td>
-                    <td class="p-4 font-bold text-run-purple dark:text-gray-100" id="rp-total-${index}">${formatRp(totalRencana)}</td>
-                    <td class="p-4 font-bold text-run-purple/70 dark:text-gray-400" id="rp-real-${index}">${formatRp(realisasi)}</td>
-                    <td class="p-4 text-center" id="rp-status-${index}">${statusBadge}</td>
-                `;
-                tableBody.appendChild(tr);
+            const grouped = {};
+            listPengeluaran.forEach(k => {
+                const g = getCategoryGroup(k);
+                if(!grouped[g]) grouped[g] = [];
+                grouped[g].push(k);
             });
 
+            // Sorting groups by prefix number so 1X comes before 2X, etc.
+            const sortedGroups = Object.keys(grouped).sort((a,b) => {
+                let numA = parseInt(a) || 999;
+                let numB = parseInt(b) || 999;
+                return numA - numB;
+            });
+
+            let rowIndex = 0;
+
+            sortedGroups.forEach(groupName => {
+                const trGroup = document.createElement('tr');
+                trGroup.className = "bg-run-purple/10 dark:bg-white/5 border-t-2 border-run-purple/10 dark:border-white/10";
+                trGroup.innerHTML = `<td colspan="6" class="p-4 text-xs font-extrabold text-run-purple dark:text-gray-100 tracking-wider">${groupName}</td>`;
+                tableBody.appendChild(trGroup);
+
+                grouped[groupName].forEach(kategori => {
+                    if(!rencanaPengeluaranData[kategori]) {
+                        rencanaPengeluaranData[kategori] = { jumlah: 0, harga: 0 };
+                    }
+                    const dataKat = rencanaPengeluaranData[kategori];
+                    const realisasi = getRealisasiPengeluaranBulanIni(kategori);
+                    const totalRencana = (dataKat.jumlah || 0) * (dataKat.harga || 0);
+                    const sisa = totalRencana - realisasi;
+                    const statusBadge = getStatusBadge(totalRencana, sisa);
+                    const slug = `rp-row-${rowIndex}`;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-4 text-xs font-bold text-run-purple dark:text-gray-200 truncate max-w-[200px]" title="${kategori}">${kategori}</td>
+                        <td class="p-4">
+                            <input type="text" data-kat="${kategori}" data-idx="${rowIndex}" data-field="jumlah" value="${dataKat.jumlah ? formatNumberForInput(dataKat.jumlah) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-16 md:w-20 outline-none focus:border-run-purple dark:focus:border-gray-400 text-center">
+                        </td>
+                        <td class="p-4">
+                            <input type="text" data-kat="${kategori}" data-idx="${rowIndex}" data-field="harga" value="${dataKat.harga ? formatNumberForInput(dataKat.harga) : ''}" placeholder="0" class="rp-input bg-run-purple/5 dark:bg-dark-input border border-run-purple/10 dark:border-white/5 rounded-lg p-2 font-bold text-xs w-28 md:w-32 outline-none focus:border-run-purple dark:focus:border-gray-400">
+                        </td>
+                        <td class="p-4 font-bold text-run-purple dark:text-gray-100" id="${slug}-total">${formatRp(totalRencana)}</td>
+                        <td class="p-4 font-bold text-run-purple/70 dark:text-gray-400" id="${slug}-real">${formatRp(realisasi)}</td>
+                        <td class="p-4 text-center" id="${slug}-status">${statusBadge}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                    rowIndex++;
+                });
+            });
+
+            // Assign listeners AFTER building DOM to avoid focus loss (prevent re-render on input)
             document.querySelectorAll('.rp-input').forEach(input => {
                 input.addEventListener('input', function() {
                     let val = this.value.replace(/[^0-9,]/g, '');
                     const parts = val.split(',');
                     if (parts.length > 2) val = parts[0] + ',' + parts.slice(1).join('');
                     if (parts[0].length > 0) parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    
+                    // Directly apply format to preserve focus (cursor may jump, but keyboard won't close)
                     this.value = parts[1] !== undefined ? parts[0] + ',' + parts[1].substring(0, 2) : parts[0];
 
                     const kat = this.dataset.kat;
                     const field = this.dataset.field;
+                    const idx = this.dataset.idx;
+
                     rencanaPengeluaranData[kat][field] = parseRupiahInput(this.value);
                     
-                    // Re-render specifically this row logic (or just full render for simplicity since it's local state)
-                    renderRencanaPengeluaranTable();
+                    // Update only specific DOM elements instead of re-rendering full table
+                    const dataKat = rencanaPengeluaranData[kat];
+                    const realisasi = getRealisasiPengeluaranBulanIni(kat);
+                    const totalRencana = (dataKat.jumlah || 0) * (dataKat.harga || 0);
+                    const sisa = totalRencana - realisasi;
+
+                    document.getElementById(`rp-row-${idx}-total`).innerText = formatRp(totalRencana);
+                    document.getElementById(`rp-row-${idx}-status`).innerHTML = getStatusBadge(totalRencana, sisa);
                 });
             });
         }
@@ -1128,7 +1174,7 @@
             viewRencanaPengeluaran.classList.add('hidden'); viewPengaturan.classList.add('hidden');
 
             navBtns.forEach(btn => {
-                btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn" + (btn.id === 'nav-rencana' ? ' ml-2 border-l-2 border-run-purple/20 dark:border-gray-600' : '');
+                btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-run-purple/60 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/5 dark:hover:bg-white/5 rounded-xl transition nav-btn";
                 const svg = btn.querySelector('svg');
                 if (svg) svg.classList.add('opacity-70');
             });
@@ -1136,7 +1182,7 @@
             const activateButton = (btnId) => {
                 const btn = document.getElementById(btnId);
                 if (btn) {
-                    btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-run-white bg-run-purple shadow-md rounded-xl transition nav-btn" + (btn.id === 'nav-rencana' ? ' ml-2' : '');
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-run-white bg-run-purple shadow-md rounded-xl transition nav-btn";
                     const svg = btn.querySelector('svg');
                     if (svg) svg.classList.remove('opacity-70');
                 }
@@ -1178,9 +1224,8 @@
                     await setDoc(docRef, kategoriData);
                 }
 
-                // Inject Kategori Khusus Otomatis jika tidak ada agar fitur Penyesuaian Budget berfungsi
+                // Injeksi Pengurangan Khusus jika terhapus
                 if (!kategoriData.pengeluaran.includes("Pengurangan Khusus")) kategoriData.pengeluaran.unshift("Pengurangan Khusus");
-                if (!kategoriData.pemasukan.includes("Penambahan Khusus")) kategoriData.pemasukan.unshift("Penambahan Khusus");
 
                 renderDropdownKategori();
                 renderUIKategoriKustom();
