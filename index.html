@@ -441,10 +441,15 @@
                                 <button type="button" id="set-tab-pemasukan" class="flex-1 py-2 text-xs font-bold rounded-xl text-run-purple/50 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/10 dark:hover:bg-white/10 transition-all">Pemasukan</button>
                             </div>
 
-                            <form id="form-tambah-kategori" class="flex gap-2 mb-5">
-                                <input type="text" id="input-kategori-baru" required class="flex-1 bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-2.5 px-3 text-sm text-run-purple dark:text-white font-medium focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition" placeholder="Nama Kategori...">
-                                <button type="button" id="btn-cancel-edit-kategori" class="hidden bg-run-purple/10 dark:bg-white/10 hover:bg-run-purple/20 dark:hover:bg-white/20 text-run-purple dark:text-white font-bold py-2.5 px-3 rounded-xl transition text-sm">Batal</button>
-                                <button type="submit" id="btn-submit-kategori" class="bg-run-purple dark:bg-gray-700 hover:bg-[#3d1d56] dark:hover:bg-gray-600 text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md text-sm whitespace-nowrap">Tambah</button>
+                            <form id="form-tambah-kategori" class="flex flex-col md:flex-row gap-2 mb-5">
+                                <select id="select-group-kategori" class="bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-2.5 px-3 text-sm text-run-purple dark:text-white font-medium focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition w-full md:w-1/3 hidden cursor-pointer">
+                                    <!-- Dynamic Group Options -->
+                                </select>
+                                <div class="flex flex-1 gap-2">
+                                    <input type="text" id="input-kategori-baru" required class="flex-1 bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-2.5 px-3 text-sm text-run-purple dark:text-white font-medium focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition w-full" placeholder="Nama Kategori...">
+                                    <button type="button" id="btn-cancel-edit-kategori" class="hidden bg-run-purple/10 dark:bg-white/10 hover:bg-run-purple/20 dark:hover:bg-white/20 text-run-purple dark:text-white font-bold py-2.5 px-3 rounded-xl transition text-sm shrink-0">Batal</button>
+                                    <button type="submit" id="btn-submit-kategori" class="bg-run-purple dark:bg-gray-700 hover:bg-[#3d1d56] dark:hover:bg-gray-600 text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md text-sm whitespace-nowrap shrink-0">Tambah</button>
+                                </div>
                             </form>
 
                             <div class="bg-run-purple/5 dark:bg-dark-input rounded-xl border border-run-purple/10 dark:border-white/5 p-3 h-48 overflow-y-auto custom-scroll">
@@ -567,6 +572,7 @@
         const setTabPengeluaran = document.getElementById('set-tab-pengeluaran');
         const setTabPemasukan = document.getElementById('set-tab-pemasukan');
         const formTambahKategori = document.getElementById('form-tambah-kategori');
+        const selectGroupKategori = document.getElementById('select-group-kategori');
         const inputKategoriBaru = document.getElementById('input-kategori-baru');
         const listKategoriKustom = document.getElementById('list-kategori-kustom');
         const emptyKategoriKustom = document.getElementById('empty-kategori-kustom');
@@ -582,6 +588,34 @@
             html.classList.toggle('dark');
             localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
+
+        // Peta Grup Kategori Otomatis (Tanpa Embel-Embel Angka)
+        const groupMapping = {
+            1: 'Makanan',
+            2: 'Transportasi',
+            3: 'Gaming',
+            4: 'Kebutuhan Bulanan',
+            5: 'Belanja/Beban',
+            6: 'Sewa/Kontrak Properti',
+            7: 'Pemeliharaan',
+            8: 'Entertainment/Langganan',
+            9: 'Hobi/Konsumtif',
+            10: 'Olahraga',
+            11: 'Uang Keluar/Pengalihan'
+        };
+
+        function populateGroupDropdown() {
+            if(!selectGroupKategori) return;
+            selectGroupKategori.innerHTML = '';
+            Object.keys(groupMapping).forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = groupMapping[key];
+                opt.className = 'font-medium text-gray-800 dark:text-white dark:bg-gray-800';
+                selectGroupKategori.appendChild(opt);
+            });
+        }
+        populateGroupDropdown();
 
         // DATA KATEGORI BAWAAN SISTEM
         const defaultPengeluaran = [
@@ -994,20 +1028,6 @@
             loadRencanaPengeluaranData();
         });
 
-        const groupMapping = {
-            1: '1X Makanan',
-            2: '2X Transportasi',
-            3: '3X Gaming',
-            4: '4X Kebutuhan Bulanan',
-            5: '5X Belanja/Beban',
-            6: '6X Sewa/Kontrak Properti',
-            7: '7X Pemeliharaan',
-            8: '8X Entertainment/Langganan',
-            9: '9X Hobi/Konsumtif',
-            10: '10X Olahraga',
-            11: '11X Uang Keluar/Pengalihan'
-        };
-
         function getCategoryGroup(catName) {
             let match = catName.match(/^(\d+)/);
             if (match) {
@@ -1076,27 +1096,24 @@
 
             const grouped = {};
             listPengeluaran.forEach(k => {
-                const g = getCategoryGroup(k);
-                if(!grouped[g]) grouped[g] = [];
-                grouped[g].push(k);
+                let m = k.match(/^(\d+)/);
+                let prefix = m ? Math.floor(parseInt(m[1]) / 10) : 999;
+                const gName = getCategoryGroup(k);
+                if(!grouped[prefix]) grouped[prefix] = { name: gName, items: [] };
+                grouped[prefix].items.push(k);
             });
 
-            // Sorting groups by prefix number so 1X comes before 2X, etc.
-            const sortedGroups = Object.keys(grouped).sort((a,b) => {
-                let numA = parseInt(a) || 999;
-                let numB = parseInt(b) || 999;
-                return numA - numB;
-            });
-
+            // Sorting groups by prefix number
+            const sortedPrefixes = Object.keys(grouped).sort((a,b) => parseInt(a) - parseInt(b));
             let rowIndex = 0;
 
-            sortedGroups.forEach(groupName => {
+            sortedPrefixes.forEach(prefix => {
                 const trGroup = document.createElement('tr');
                 trGroup.className = "bg-run-purple/10 dark:bg-white/5 border-t-2 border-run-purple/10 dark:border-white/10";
-                trGroup.innerHTML = `<td colspan="6" class="p-4 text-xs font-extrabold text-run-purple dark:text-gray-100 tracking-wider">${groupName}</td>`;
+                trGroup.innerHTML = `<td colspan="6" class="p-4 text-xs font-extrabold text-run-purple dark:text-gray-100 tracking-wider">${grouped[prefix].name}</td>`;
                 tableBody.appendChild(trGroup);
 
-                grouped[groupName].forEach(kategori => {
+                grouped[prefix].items.forEach(kategori => {
                     if(!rencanaPengeluaranData[kategori]) {
                         rencanaPengeluaranData[kategori] = { jumlah: 0, harga: 0 };
                     }
@@ -1276,7 +1293,7 @@
         function resetKategoriForm() {
             isEditingCategory = false; editingCategoryIndex = null; inputKategoriBaru.value = '';
             btnCancelEditKategori.classList.add('hidden'); btnSubmitKategori.innerText = "Tambah";
-            btnSubmitKategori.className = "bg-run-purple dark:bg-gray-700 hover:bg-[#3d1d56] dark:hover:bg-gray-600 text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md text-sm whitespace-nowrap";
+            btnSubmitKategori.className = "bg-run-purple dark:bg-gray-700 hover:bg-[#3d1d56] dark:hover:bg-gray-600 text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md text-sm whitespace-nowrap shrink-0";
         }
         btnCancelEditKategori.addEventListener('click', resetKategoriForm);
 
@@ -1285,9 +1302,11 @@
             if (isSettingsPengeluaran) {
                 setTabPengeluaran.className = "flex-1 py-2 text-xs font-bold rounded-xl bg-run-red text-run-white shadow-sm transition-all";
                 setTabPemasukan.className = "flex-1 py-2 text-xs font-bold rounded-xl text-run-purple/50 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/10 dark:hover:bg-white/10 transition-all";
+                selectGroupKategori.classList.remove('hidden'); // Munculkan dropdown Grup untuk pengeluaran
             } else {
                 setTabPemasukan.className = "flex-1 py-2 text-xs font-bold rounded-xl bg-run-purple dark:bg-gray-600 text-run-white shadow-sm transition-all";
                 setTabPengeluaran.className = "flex-1 py-2 text-xs font-bold rounded-xl text-run-purple/50 dark:text-gray-400 hover:text-run-purple dark:hover:text-white hover:bg-run-purple/10 dark:hover:bg-white/10 transition-all";
+                selectGroupKategori.classList.add('hidden'); // Sembunyikan dropdown untuk pemasukan
             }
             resetKategoriForm(); renderUIKategoriKustom();
         }
@@ -1301,17 +1320,19 @@
             else {
                 emptyKategoriKustom.classList.add('hidden');
                 dataTarget.forEach((item, index) => {
+                    const isSpecial = (item === "Pengurangan Khusus");
                     const li = document.createElement('li');
                     li.className = "flex justify-between items-center bg-run-white dark:bg-dark-card p-2.5 rounded-lg border border-run-purple/5 dark:border-white/5 transition-colors duration-300";
                     li.innerHTML = `
                         <span class="text-sm font-bold text-run-purple dark:text-gray-200 truncate pr-2">${item}</span>
                         <div class="flex items-center gap-1 shrink-0">
+                            ${!isSpecial ? `
                             <button onclick="window.editKategori(${index})" class="text-run-purple dark:text-gray-300 hover:bg-run-purple/10 dark:hover:bg-white/10 p-1.5 rounded-md transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </button>
                             <button onclick="window.hapusKategoriKustom(${index})" class="text-run-red dark:text-[#ff6b84] hover:bg-run-red/10 dark:hover:bg-red-500/20 p-1.5 rounded-md transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
+                            </button>` : `<span class="text-[10px] uppercase font-bold text-run-purple/40 dark:text-gray-500 px-2 tracking-widest">Sistem</span>`}
                         </div>`;
                     listKategoriKustom.appendChild(li);
                 });
@@ -1319,24 +1340,84 @@
         }
 
         formTambahKategori.addEventListener('submit', (e) => {
-            e.preventDefault(); const val = inputKategoriBaru.value.trim(); if(!val) return;
+            e.preventDefault(); 
+            const val = inputKategoriBaru.value.trim(); 
+            if(!val) return;
+            
             const arr = isSettingsPengeluaran ? kategoriData.pengeluaran : kategoriData.pemasukan;
-            if(isEditingCategory) {
-                if(arr.includes(val) && val !== arr[editingCategoryIndex]) return showToast("Nama kategori sudah digunakan", "error");
-                arr[editingCategoryIndex] = val; showToast("Kategori diperbarui");
-            } else {
-                if(arr.includes(val)) return showToast("Kategori sudah ada", "error");
-                arr.push(val); showToast("Kategori ditambahkan");
+            let finalVal = val;
+
+            // Logika Auto-Numbering Khusus Pengeluaran
+            if (isSettingsPengeluaran) {
+                const prefix = parseInt(selectGroupKategori.value);
+                
+                if (isEditingCategory) {
+                    let oldVal = arr[editingCategoryIndex];
+                    let oldMatch = oldVal.match(/^(\d+)\s+-\s+(.*)$/);
+                    // Jika mengedit dan grup-nya tetap SAMA, tidak perlu generate nomor baru
+                    if (oldMatch && Math.floor(parseInt(oldMatch[1]) / 10) === prefix) {
+                        finalVal = `${oldMatch[1]} - ${val}`;
+                    } else {
+                        // Jika grup diubah / kategori tidak punya nomor, Generate Nomor Baru di Grup Tersebut
+                        let nextNum = prefix * 10 + 1;
+                        let existingNums = arr.map(c => {
+                            let m = c.match(/^(\d+)/);
+                            return m ? parseInt(m[1]) : 0;
+                        }).filter(n => Math.floor(n / 10) === prefix);
+                        
+                        if(existingNums.length > 0) nextNum = Math.max(...existingNums) + 1;
+                        finalVal = `${nextNum} - ${val}`;
+                    }
+                } else {
+                    // Jika Menambah Kategori Baru
+                    let nextNum = prefix * 10 + 1;
+                    let existingNums = arr.map(c => {
+                        let m = c.match(/^(\d+)/);
+                        return m ? parseInt(m[1]) : 0;
+                    }).filter(n => Math.floor(n / 10) === prefix);
+                    
+                    if(existingNums.length > 0) nextNum = Math.max(...existingNums) + 1;
+                    finalVal = `${nextNum} - ${val}`;
+                }
             }
-            resetKategoriForm(); saveSettings();
+
+            if(isEditingCategory) {
+                if(arr.includes(finalVal) && finalVal !== arr[editingCategoryIndex]) return showToast("Nama Kategori sudah digunakan", "error");
+                arr[editingCategoryIndex] = finalVal; 
+                showToast("Kategori diperbarui");
+            } else {
+                if(arr.includes(finalVal)) return showToast("Kategori sudah ada", "error");
+                arr.push(finalVal); 
+                showToast("Kategori ditambahkan");
+            }
+            
+            resetKategoriForm(); 
+            saveSettings();
         });
 
         window.editKategori = (index) => {
             const arr = isSettingsPengeluaran ? kategoriData.pengeluaran : kategoriData.pemasukan;
-            inputKategoriBaru.value = arr[index]; isEditingCategory = true; editingCategoryIndex = index;
+            let currentVal = arr[index];
+            
+            // Ekstrak nama asli dan Set Dropdown ke grup yang sesuai
+            if (isSettingsPengeluaran) {
+                let match = currentVal.match(/^(\d+)\s+-\s+(.*)$/);
+                if (match) {
+                    let prefix = Math.floor(parseInt(match[1]) / 10);
+                    selectGroupKategori.value = prefix;
+                    inputKategoriBaru.value = match[2]; // Isi kolom text hanya dengan namanya saja
+                } else {
+                    inputKategoriBaru.value = currentVal;
+                }
+            } else {
+                inputKategoriBaru.value = currentVal;
+            }
+            
+            isEditingCategory = true; 
+            editingCategoryIndex = index;
             btnCancelEditKategori.classList.remove('hidden');
             btnSubmitKategori.innerText = "Simpan";
-            btnSubmitKategori.className = "bg-run-red hover:bg-[#c40024] text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-run-red/30 text-sm whitespace-nowrap";
+            btnSubmitKategori.className = "bg-run-red hover:bg-[#c40024] text-run-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-run-red/30 text-sm whitespace-nowrap shrink-0";
             inputKategoriBaru.focus();
         };
 
