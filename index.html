@@ -230,14 +230,14 @@
                                 </div>
                                 
                                 <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                                    <div class="w-full sm:w-1/2">
+                                    <div class="w-full sm:w-2/5">
                                         <label class="block text-run-purple dark:text-gray-300 text-xs font-bold mb-2 uppercase tracking-wide">Jumlah (Rp)</label>
                                         <input type="text" id="jumlah" inputmode="decimal" required class="w-full bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-3.5 px-4 text-run-purple dark:text-white font-medium focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition" placeholder="10.000,50">
                                     </div>
-                                    <div class="w-full sm:w-1/2">
+                                    <div class="w-full sm:w-3/5">
                                         <label class="block text-run-purple dark:text-gray-300 text-xs font-bold mb-2 uppercase tracking-wide">Kategori</label>
-                                        <select id="kategori" required class="w-full bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-3.5 px-4 text-run-purple dark:text-white font-semibold focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition appearance-none cursor-pointer">
-                                        </select>
+                                        <input type="text" id="kategori" list="kategori-options" autocomplete="off" required class="w-full bg-run-purple/5 dark:bg-dark-input border-2 border-transparent dark:border-white/5 rounded-xl py-3.5 px-4 text-run-purple dark:text-white font-medium focus:bg-run-white dark:focus:bg-gray-800 focus:ring-0 focus:border-run-red outline-none transition" placeholder="Cth: 11 (Ketik kode)">
+                                        <datalist id="kategori-options"></datalist>
                                     </div>
                                 </div>
                                 
@@ -578,6 +578,7 @@
         const formTransaksi = document.getElementById('form-transaksi');
         const inputKeterangan = document.getElementById('keterangan');
         const inputKategori = document.getElementById('kategori');
+        const kategoriOptions = document.getElementById('kategori-options'); // Elemen Datalist
         const inputJumlah = document.getElementById('jumlah');
         const inputTanggal = document.getElementById('tanggal');
         const emptyState = document.getElementById('empty-state');
@@ -614,18 +615,33 @@
                 inputKategori.focus();
             }
         });
+        
+        // Logika Autocomplete cerdas untuk Kategori
         inputKategori.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
+                const val = this.value.trim().toLowerCase();
+                const currentList = isPengeluaran ? kategoriData.pengeluaran : kategoriData.pemasukan;
+                
+                if (val) {
+                    // Coba cari kategori yang diawali dengan huruf/angka yang diketik (misal: "11")
+                    const match = currentList.find(c => c.toLowerCase().startsWith(val));
+                    if (match) {
+                        this.value = match; // Otomatis lengkapi form dengan string full-nya
+                    }
+                }
+                // Lanjut ke input berikutnya
                 inputKeterangan.focus();
             }
         });
+
         inputKeterangan.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 inputTanggal.focus();
             }
         });
+        
         inputTanggal.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1388,19 +1404,15 @@
         }
 
         function renderDropdownKategori() {
-            inputKategori.innerHTML = '';
+            kategoriOptions.innerHTML = ''; // Update the datalist options
+            inputKategori.value = ''; // Reset form input
             const dataToRender = isPengeluaran ? kategoriData.pengeluaran : kategoriData.pemasukan;
             if (dataToRender && dataToRender.length > 0) {
                 dataToRender.forEach(item => {
                     const option = document.createElement('option');
-                    option.value = item; option.textContent = item;
-                    option.className = 'font-medium text-gray-800 dark:text-white dark:bg-gray-800';
-                    inputKategori.appendChild(option);
+                    option.value = item;
+                    kategoriOptions.appendChild(option);
                 });
-            } else {
-                const option = document.createElement('option');
-                option.value = ""; option.textContent = "Belum ada kategori";
-                inputKategori.appendChild(option);
             }
         }
 
@@ -1675,10 +1687,28 @@
             try {
                 const jumlahFloat = parseRupiahInput(inputJumlah.value);
                 if (isNaN(jumlahFloat) || jumlahFloat <= 0) { showToast("Jumlah tidak valid", 'error'); throw new Error("Invalid Input"); }
+                
+                // VALIDASI KATEGORI
+                let catValue = inputKategori.value.trim();
+                const validCats = isPengeluaran ? kategoriData.pengeluaran : kategoriData.pemasukan;
+                
+                if (!validCats.includes(catValue)) {
+                    // Upaya terakhir untuk Autocomplete jika user langsung klik Simpan sebelum enter
+                    const match = validCats.find(c => c.toLowerCase().startsWith(catValue.toLowerCase()));
+                    if (match) {
+                        catValue = match;
+                        inputKategori.value = match;
+                    } else {
+                        showToast("Kategori tidak valid/tidak ditemukan. Pilih dari daftar.", 'error');
+                        btnSubmit.disabled = false; textSubmitForm.innerText = currentEditId ? "Update Transaksi" : "Simpan Transaksi";
+                        return; // Stop submission
+                    }
+                }
+
                 const dataSimpan = {
                     keterangan: inputKeterangan.value, jumlah: jumlahFloat,
                     jenis: isPengeluaran ? 'pengeluaran' : 'pemasukan',
-                    kategori: inputKategori.value, tanggal: inputTanggal.value,
+                    kategori: catValue, tanggal: inputTanggal.value,
                     createdAt: currentEditId ? undefined : Date.now() 
                 };
 
